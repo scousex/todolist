@@ -9,10 +9,11 @@ import java.util.List;
 
 
 public interface NoteRepository extends JpaRepository<Note,Integer> {
-    List<Note> findAllByUserIdBOrderByNoteIdAsc(@Param("username") String username);
+    List<Note> findAllByOrderByNoteIdAsc();
+    /*List<Note> findAllByUserIdBOrderByNoteIdAsc(@Param("username") String username);
     List<Note> findAllByUserIdBOrderByNoteIdDesc(@Param("username") String username);
     Note findByNoteId(@Param("noteId") long id);
     void deleteByNoteId(@Param("noteId") long noteId);
     void setNoteStatus(@Param("noteId") long noteId, @Param("status") boolean status);
-    void saveNote(@Param("username") String username,  @Param("text") String text);
+    void saveNote(@Param("username") String username,  @Param("text") String text);*/
 }

@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface NoteService {
 
-    Note getNoteById(Integer id);
+    /*Note getNoteById(Integer id);
     void saveNote(Note note);
     void setNoteStatus(Integer id, boolean status);
     void deleteNote(Integer id);
-    void updateNote(Integer id, String text, boolean status);
-    List<Note> findAllOrderByAsc(String username);
-    List<Note> findAllOrderByDesc(String username);
+    void updateNote(Integer id, String text, boolean status);*/
+    List<Note> findAllOrderByAsc();
+    //List<Note> findAllOrderByDesc(String username);
 }
 
 

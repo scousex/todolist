@@ -16,12 +16,12 @@ public class NoteServiceImpl implements NoteService{
         this.noteRepository = noteRepository;
     }
 
-    @Override
-    public Note getNoteById(Integer id){
-        return noteRepository.findByNoteId(id);
-    }
+    //@Override
+    //public Note getNoteById(Integer id){
+       // return noteRepository.findByNoteId(id);
+    //}
 
-    @Override
+   /* @Override
     public void setNoteStatus(Integer id, boolean status) {
         noteRepository.setNoteStatus(id,status);
     }
@@ -48,5 +48,9 @@ public class NoteServiceImpl implements NoteService{
     @Override
     public List<Note> findAllOrderByDesc(String username) {
         return noteRepository.findAllByUserIdBOrderByNoteIdDesc(username);
-    }
+    }*/
+   @Override
+   public List<Note> findAllOrderByAsc() {
+       return noteRepository.findAllByOrderByNoteIdAsc();
+   }
 }
