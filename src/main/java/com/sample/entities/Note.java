@@ -3,11 +3,12 @@ package com.sample.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "note", schema = "test", catalog = "")
+@Table(name = "note", schema = "heroku_778f00b1b8e6900", catalog = "")
 public class Note {
 
     //note id (primary key) генерируется spring'ом
     @Id
+    @Column(name = "note_id")
    // @GeneratedValue
     private Integer noteId;
 

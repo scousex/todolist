@@ -30,7 +30,7 @@ public class NoteController {
         this.noteService = service;
     }
 
-    @GetMapping(path="/notes", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> list(Model model){
         List<Note> notes = filterAndSort();
         model.addAttribute("notes",notes);
