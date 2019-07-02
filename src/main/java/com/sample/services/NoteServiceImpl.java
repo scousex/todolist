@@ -9,26 +9,23 @@ import java.util.List;
 
 @Service
 public class NoteServiceImpl implements NoteService{
-    private NoteRepository noteRepository;
 
     @Autowired
-    public void setNoteRepository(NoteRepository noteRepository){
-        this.noteRepository = noteRepository;
+    private NoteRepository noteRepository;
+
+    @Override
+    public Note getNoteById(Integer id){
+       return noteRepository.findByNoteId(id);
     }
 
-    //@Override
-    //public Note getNoteById(Integer id){
-       // return noteRepository.findByNoteId(id);
+   // @Override
+    //public void setNoteStatus(Integer id, boolean status) {
+     //   noteRepository.setNoteStatus(id,status);
     //}
-
-   /* @Override
-    public void setNoteStatus(Integer id, boolean status) {
-        noteRepository.setNoteStatus(id,status);
-    }
 
     @Override
     public void saveNote(Note note){
-        noteRepository.saveNote(note.getUsername(), note.getText());
+        noteRepository.save(note);
     }
 
     @Override
@@ -43,14 +40,11 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public List<Note> findAllOrderByAsc(String username) {
-        return noteRepository.findAllByUserIdBOrderByNoteIdAsc(username);
+        return noteRepository.findAllByUsernameOrderByNoteIdAsc(username);
     }
     @Override
     public List<Note> findAllOrderByDesc(String username) {
-        return noteRepository.findAllByUserIdBOrderByNoteIdDesc(username);
-    }*/
-   @Override
-   public List<Note> findAllOrderByAsc() {
-       return noteRepository.findAllByOrderByNoteIdAsc();
-   }
+        return noteRepository.findAllByUsernameOrderByNoteIdDesc(username);
+    }
+
 }

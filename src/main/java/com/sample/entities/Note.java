@@ -9,11 +9,11 @@ public class Note {
     //note id (primary key) генерируется spring'ом
     @Id
     @Column(name = "note_id")
-   // @GeneratedValue
+    @GeneratedValue
     private Integer noteId;
 
-    //@Column(name = "username")
-    //private String username;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "text")
     //note text
@@ -26,14 +26,14 @@ public class Note {
     public Note(){}
 
     public Note(String username, String text){
-      //  this.username = username;
+        this.username = username;
         this.text = text;
         this.status = false;
     }
 
-   // public String getUsername() {
-    //    return username;
-   // }
+    public String getUsername() {
+        return username;
+    }
 
     public String getText() {
         return text;

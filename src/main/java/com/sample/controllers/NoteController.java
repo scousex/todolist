@@ -2,6 +2,7 @@ package com.sample.controllers;
 
 import com.sample.entities.Note;
 import com.sample.services.NoteService;
+import com.sample.services.SecurityService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,12 @@ public class NoteController {
 
     private String sortDateMethod = "ASC";
 
+    @Autowired
     private NoteService noteService;
 
     @Autowired
-    public void setNoteService(NoteService service){
-        this.noteService = service;
-    }
+    private SecurityService securityService;
+
 
     @GetMapping(path="/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> list(Model model){
@@ -53,7 +54,7 @@ public class NoteController {
         List<Note> notebook = null;
         switch (sortDateMethod) {
             case "ASC":
-                notebook = noteService.findAllOrderByAsc();
+                notebook = securityService.findTodolistInUsername();
                 break;
             /*case "DESC":
                 notebook = noteService.findAllOrderByDesc(username);
