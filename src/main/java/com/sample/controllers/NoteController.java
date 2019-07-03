@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.MapKey;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -31,13 +33,13 @@ public class NoteController {
     @GetMapping(path="todos", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> list(){
         List<Note> notes = filterAndSort();
-        List<JSONObject> entities = new ArrayList<JSONObject>();
+        HashMap<String,JSONObject> entities = new LinkedHashMap<>();
         for (Note n : notes) {
             JSONObject entity = new JSONObject();
             entity.put("noteid",n.getNoteId());
             entity.put("text",n.getText());
             entity.put("status", n.getStatus());
-            entities.add(entity);
+            entities.put("note",entity);
         }
         return new ResponseEntity<Object>(entities, HttpStatus.OK);
     }
@@ -48,10 +50,10 @@ public class NoteController {
         List<Note> notebook = null;
         switch (sortDateMethod) {
             case "ASC":
-                notebook = securityService.findTodolistInUsername();
+                notebook = noteService.findAllOrderByAsc(securityService.findUserInUsername());
                 break;
             case "DESC":
-                notebook = securityService.findTodolistInUsername();
+                notebook = noteService.findAllOrderByDesc(securityService.findUserInUsername());
                 break;
         }
         return notebook;

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SecurityService {
 
-    List<Note> findTodolistInUsername();
+    String findUserInUsername();
 
     void autoLogin(String username, String password);
 }
