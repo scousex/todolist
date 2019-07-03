@@ -23,7 +23,7 @@ public class SecurityServiceImpl implements SecurityService {
     private NoteService noteService;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
     /**
      * Funcition to find users todolist after authorization

@@ -2,6 +2,7 @@ package com.sample.services;
 
 import com.sample.entities.Note;
 import com.sample.entities.repos.NoteRepository;
+import com.sample.entities.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class NoteServiceImpl implements NoteService{
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Note getNoteById(Integer id){
@@ -24,8 +28,14 @@ public class NoteServiceImpl implements NoteService{
     //}
 
     @Override
-    public void saveNote(Note note){
-        noteRepository.save(note);
+    public boolean saveNote(Note note){
+        if(userRepository.findByUsername(note.getUsername())!=null){
+            noteRepository.save(note);
+            return true;
+        }
+
+        return false;
+
     }
 
     @Override

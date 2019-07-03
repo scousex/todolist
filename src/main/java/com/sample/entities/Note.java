@@ -51,5 +51,11 @@ public class Note {
         return status;
     }
 
+    public Integer getNoteId() {
+        return noteId;
+    }
 
+    public void setNoteId(Integer noteId) {
+        this.noteId = noteId;
+    }
 }
