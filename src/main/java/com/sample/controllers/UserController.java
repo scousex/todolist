@@ -35,7 +35,7 @@ public class UserController {
     private UserValidator userValidator;
 
 
-    @PostMapping(path="registration", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registration(@RequestParam("username") String username,
                                                @RequestParam("password") String password, BindingResult bindingResult){
 
@@ -56,14 +56,14 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @GetMapping(path="login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
 
 
         logger.info("Login started");
-        if(userService.findByUsername(username)!=null){
+        if(userService.findByUsername(username)==null){
             logger.info("Username is not found");
-           return new ResponseEntity<Object>("User with this username already exists", HttpStatus.BAD_REQUEST);
+           return new ResponseEntity<Object>("User does not exists", HttpStatus.BAD_REQUEST);
         }
         logger.info("AutoLogin started");
         securityService.autoLogin(username,password);

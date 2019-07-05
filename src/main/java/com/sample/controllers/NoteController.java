@@ -1,9 +1,12 @@
 package com.sample.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
 import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
-import net.minidev.json.JSONObject;
+
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,9 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 public class NoteController {
+
+    public static final Logger logger = Logger.getLogger(NoteController.class.getName());
 
     private String sortDateMethod = "ASC";
 
@@ -31,17 +37,16 @@ public class NoteController {
 
 
     @GetMapping(path="todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> list(){
+    public ResponseEntity<String> list(){
+        Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort();
-        HashMap<String,JSONObject> entities = new LinkedHashMap<>();
-        for (Note n : notes) {
-            JSONObject entity = new JSONObject();
-            entity.put("noteid",n.getNoteId());
-            entity.put("text",n.getText());
-            entity.put("status", n.getStatus());
-            entities.put("note",entity);
-        }
-        return new ResponseEntity<Object>(entities, HttpStatus.OK);
+
+        logger.info("Получено "+notes.size() + " записей из базы");
+
+
+        String usersNotes = gsonBuilder.toJson(notes);
+
+        return new ResponseEntity<String>(usersNotes, HttpStatus.OK);
     }
 
 
@@ -56,6 +61,8 @@ public class NoteController {
                 notebook = noteService.findAllOrderByDesc(securityService.findUserInUsername());
                 break;
         }
+        System.out.println("Получено " + notebook.size());
+
         return notebook;
     }
 

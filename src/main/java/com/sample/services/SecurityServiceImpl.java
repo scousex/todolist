@@ -1,11 +1,13 @@
 package com.sample.services;
 
 import com.sample.entities.Note;
+import com.sample.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -41,12 +45,22 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public String findUserInUsername() {
 
-        logger.info("Getting users todolist...");
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
+        //logger.info("SecurityContextHolder info: "
+          //      + SecurityContextHolder.getContext().getAuthentication().getDetails().toString());
 
-        if(userDetails instanceof UserDetails){
-            return ((UserDetails) userDetails).getUsername();
+        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        logger.info("SecurityContextHolder info: "
+              + userDetails.toString());
+
+
+        if(userDetails != null){
+           // logger.info("Users name: " + ((User) userDetails).getUsername());
+            return (String) userDetails;
         }
+
+        logger.info("Userdetails is null");
+
         return "NOBODY";
     }
 
@@ -62,14 +76,20 @@ public class SecurityServiceImpl implements SecurityService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         logger.info("Got userDetailService for user " + userDetails.getUsername());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), bCryptPasswordEncoder.encode(userDetails.getPassword()));
+                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         logger.info("Authentication Token was created: "+ usernamePasswordAuthenticationToken.toString());
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
+        /*try{
+            authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        } catch(Exception e){
+            logger.info("Authentication error: " + e.getMessage());
+        }*/
 
         if(usernamePasswordAuthenticationToken.isAuthenticated()){
             logger.info("User is authenticated with token");
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
+
+
     }
 }
