@@ -45,18 +45,13 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public String findUserInUsername() {
 
-        //logger.info("SecurityContextHolder info: "
-          //      + SecurityContextHolder.getContext().getAuthentication().getDetails().toString());
-
         Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         logger.info("SecurityContextHolder info: "
               + userDetails.toString());
 
-
         if(userDetails != null){
-           // logger.info("Users name: " + ((User) userDetails).getUsername());
-            return (String) userDetails;
+             return (String) userDetails;
         }
 
         logger.info("Userdetails is null");
@@ -79,11 +74,6 @@ public class SecurityServiceImpl implements SecurityService {
                     new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         logger.info("Authentication Token was created: "+ usernamePasswordAuthenticationToken.toString());
 
-        /*try{
-            authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        } catch(Exception e){
-            logger.info("Authentication error: " + e.getMessage());
-        }*/
 
         if(usernamePasswordAuthenticationToken.isAuthenticated()){
             logger.info("User is authenticated with token");
@@ -91,5 +81,11 @@ public class SecurityServiceImpl implements SecurityService {
         }
 
 
+    }
+
+    @Override
+    public void logout() {
+        SecurityContextHolder.clearContext();
+        //authenticationManager.authenticate(null);
     }
 }

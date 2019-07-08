@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.MapKey;
+import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -66,8 +67,9 @@ public class NoteController {
         return notebook;
     }
 
-    @PostMapping("add")
-    public ResponseEntity<Object> updateNote(@RequestParam String text, @RequestParam String username) {
+    @PostMapping(path = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateNote(@RequestParam("text") String text) {
+        String username = securityService.findUserInUsername();
         if(noteService.saveNote(new Note(username,text)))
         {
             return new ResponseEntity<Object>(HttpStatus.OK);
@@ -77,21 +79,22 @@ public class NoteController {
 
     }
 
-    @PutMapping("status")
-    public ResponseEntity<Object> edit(@RequestParam Integer id, @RequestParam boolean status, Model model) {
+    @PutMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> edit(@RequestParam("id") Integer id, @RequestParam("status") boolean status) {
         Note note = noteService.getNoteById(id);
         note.setStatus(status);
+        noteService.saveNote(note);
         return new ResponseEntity<Object>(HttpStatus.OK); //возвращаем view с редактированием
     }
 
-    @PutMapping("edit")
+    @PutMapping(path="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> saveNote(@RequestParam Integer id, @RequestParam String text,
                            @RequestParam(value = "status", required = false) boolean status) {
         noteService.updateNote(id, text, status);
         return new ResponseEntity<Object>(HttpStatus.OK); //обновляем view
     }
 
-    @DeleteMapping("delete")
+    @DeleteMapping(path = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> delete(@RequestParam Integer id) {
         noteService.deleteNote(id);
         return new ResponseEntity<Object>(HttpStatus.OK); //обновляем view

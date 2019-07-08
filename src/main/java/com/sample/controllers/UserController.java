@@ -1,5 +1,6 @@
 package com.sample.controllers;
 
+import com.google.gson.JsonObject;
 import com.sample.entities.User;
 import com.sample.services.SecurityService;
 import com.sample.services.UserService;
@@ -37,21 +38,25 @@ public class UserController {
 
     @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> registration(@RequestParam("username") String username,
-                                               @RequestParam("password") String password, BindingResult bindingResult){
+                                               @RequestParam("password") String password){
 
         logger.info("Registration started");
         User user = new User(username, password);
 
-        userValidator.validate(user, bindingResult);
+       // userValidator.validate(user, bindingResult);
 
-        if(bindingResult.hasErrors()){
+        if(userService.findByUsername(user.getUsername())!=null){
             logger.info("Response has errors");
             return new ResponseEntity<Object>("This user already exists",HttpStatus.BAD_REQUEST);
         }
         userService.save(user);
 
         logger.info("AutoLogin started");
-        securityService.autoLogin(user.getUsername(), user.getPassword());
+        try {
+            securityService.autoLogin(user.getUsername(), user.getPassword());
+        } catch (Exception e){
+            logger.info(e.getMessage());
+        }
 
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
@@ -71,4 +76,11 @@ public class UserController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
+   /* @GetMapping(path="/logout")
+    public ResponseEntity<JsonObject> logout()
+    {
+        securityService.logout();
+        return new ResponseEntity<JsonObject>(HttpStatus.OK);
+    }
+*/
 }

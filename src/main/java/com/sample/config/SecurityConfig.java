@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(todolistAuthenticationEntryPoint)
                 .and()
@@ -52,8 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/todos").authenticated()
+                .antMatchers("/addNotes").authenticated()
+                .antMatchers("/status").authenticated()
+                .antMatchers("/edit").authenticated()
                 .and()
-                .logout();
+                .logout().logoutUrl("/logout").permitAll();
     }
 
     @Override

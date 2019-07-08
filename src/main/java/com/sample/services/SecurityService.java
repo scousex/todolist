@@ -9,4 +9,6 @@ public interface SecurityService {
     String findUserInUsername();
 
     void autoLogin(String username, String password);
+
+    void logout();
 }
