@@ -24,8 +24,6 @@ public class UserController {
 
     public static final Logger logger = Logger.getLogger(UserController.class.getName());
 
-
-
     @Autowired
     private UserService userService;
 
@@ -40,6 +38,7 @@ public class UserController {
     public ResponseEntity<Object> registration(@RequestParam("username") String username,
                                                @RequestParam("password") String password){
 
+        String token = "Token is not generated, please sign in using /login";
         logger.info("Registration started");
         User user = new User(username, password);
 
@@ -53,17 +52,18 @@ public class UserController {
 
         logger.info("AutoLogin started");
         try {
-            securityService.autoLogin(user.getUsername(), user.getPassword());
+            token = securityService.autoLogin(user.getUsername(), user.getPassword());
         } catch (Exception e){
             logger.info(e.getMessage());
         }
 
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<Object>(token, HttpStatus.OK);
     }
 
-    @GetMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
 
+        String token;
 
         logger.info("Login started");
         if(userService.findByUsername(username)==null){
@@ -71,9 +71,9 @@ public class UserController {
            return new ResponseEntity<Object>("User does not exists", HttpStatus.BAD_REQUEST);
         }
         logger.info("AutoLogin started");
-        securityService.autoLogin(username,password);
+        token = securityService.autoLogin(username,password);
 
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<Object>(token, HttpStatus.OK);
     }
 
    /* @GetMapping(path="/logout")

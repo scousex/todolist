@@ -1,5 +1,6 @@
 package com.sample.config;
 
+import com.sample.services.SecurityService;
 import com.sample.services.TodolistAuthenticationEntryPoint;
 import com.sample.services.TodolistAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
+    SecurityService securityService;
+
+    @Autowired
     TodolistAuthenticationProvider authenticationProvider;
 
     @Autowired
@@ -36,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception{
         auth
-                .authenticationProvider(authenticationProvider)
+                .authenticationProvider((AuthenticationProvider)securityService)
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(getBCryptPasswordEncoder());
     }
@@ -47,9 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(todolistAuthenticationEntryPoint)
+              //  .authenticationEntryPoint(todolistAuthenticationEntryPoint)
                 .and()
-                .formLogin()
+                .formLogin().loginPage("/login")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/todos").authenticated()

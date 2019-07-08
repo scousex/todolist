@@ -38,16 +38,19 @@ public class NoteController {
 
 
     @GetMapping(path="todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> list(){
+    public @ResponseBody List<Note> list(){
         Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort();
+
+       // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
 
         logger.info("Получено "+notes.size() + " записей из базы");
 
 
         String usersNotes = gsonBuilder.toJson(notes);
 
-        return new ResponseEntity<String>(usersNotes, HttpStatus.OK);
+
+        return notes;
     }
 
 
@@ -81,8 +84,14 @@ public class NoteController {
 
     @PutMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> edit(@RequestParam("id") Integer id, @RequestParam("status") boolean status) {
+
+        ///TODO: Добавить проверку наличия
         Note note = noteService.getNoteById(id);
+
+        ///TODO: Обработать ошибки при смене статуса
         note.setStatus(status);
+
+        ///TODO: Обработать ошибки при сохранении
         noteService.saveNote(note);
         return new ResponseEntity<Object>(HttpStatus.OK); //возвращаем view с редактированием
     }
@@ -90,14 +99,18 @@ public class NoteController {
     @PutMapping(path="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> saveNote(@RequestParam Integer id, @RequestParam String text,
                            @RequestParam(value = "status", required = false) boolean status) {
+
+        ///TODO: Обработать ошибки обновления
         noteService.updateNote(id, text, status);
-        return new ResponseEntity<Object>(HttpStatus.OK); //обновляем view
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> delete(@RequestParam Integer id) {
+
+        ///TODO: Обработать ошибки удаления
         noteService.deleteNote(id);
-        return new ResponseEntity<Object>(HttpStatus.OK); //обновляем view
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
 }

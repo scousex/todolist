@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class SecurityServiceImpl implements SecurityService {
+public class SecurityServiceImpl implements SecurityService, AuthenticationProvider {
 
     public static final Logger logger  = Logger.getLogger(SecurityServiceImpl.class.getName());
 
@@ -65,13 +68,14 @@ public class SecurityServiceImpl implements SecurityService {
      * @param password
      */
     @Override
-    public void autoLogin(String username, String password) {
+    public String autoLogin(String username, String password) {
 
         logger.info("AutoLOgin function is working..");
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         logger.info("Got userDetailService for user " + userDetails.getUsername());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                    new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+                                        userDetails.getPassword(), userDetails.getAuthorities());
         logger.info("Authentication Token was created: "+ usernamePasswordAuthenticationToken.toString());
 
 
@@ -80,12 +84,40 @@ public class SecurityServiceImpl implements SecurityService {
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
 
-
+        logger.info("TOkEN: " + usernamePasswordAuthenticationToken.toString());
+        return usernamePasswordAuthenticationToken.toString();
     }
 
     @Override
     public void logout() {
         SecurityContextHolder.clearContext();
         //authenticationManager.authenticate(null);
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+        String username = authentication.getName();
+        logger.info("AutoLOgin function is working..");
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        logger.info("Got userDetailService for user " + userDetails.getUsername());
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+                        userDetails.getPassword(), userDetails.getAuthorities());
+        logger.info("Authentication Token was created: "+ usernamePasswordAuthenticationToken.toString());
+
+
+        if(usernamePasswordAuthenticationToken.isAuthenticated()){
+            logger.info("User is authenticated with token");
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        }
+
+        logger.info("TOkEN: " + usernamePasswordAuthenticationToken.toString());
+        return usernamePasswordAuthenticationToken;
+    }
+
+    @Override
+    public boolean supports(Class<?> aClass) {
+        return aClass.equals(UsernamePasswordAuthenticationToken.class);
     }
 }
