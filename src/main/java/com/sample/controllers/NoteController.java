@@ -72,10 +72,10 @@ public class NoteController {
         String username = securityService.findUserInUsername();
         if(noteService.saveNote(new Note(username,text)))
         {
-            return new ResponseEntity<Object>(HttpStatus.OK);
+            return new ResponseEntity<Object>("Note added",HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("username",HttpStatus.NOT_EXTENDED);
+        return new ResponseEntity<>("User is unauthorized",HttpStatus.UNAUTHORIZED);
 
     }
 
