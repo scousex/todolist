@@ -84,8 +84,8 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
 
-        logger.info("TOkEN: " + usernamePasswordAuthenticationToken.getDetails().toString());
-        return usernamePasswordAuthenticationToken.getDetails().toString();
+      //  logger.info("TOkEN: " + usernamePasswordAuthenticationToken.getDetails().toString());
+        return usernamePasswordAuthenticationToken.toString();
     }
 
     @Override
