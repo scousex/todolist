@@ -61,7 +61,7 @@ public class UserController {
     }
 
 
-    @CrossOrigin(origins = "/**")
+    @CrossOrigin
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
 

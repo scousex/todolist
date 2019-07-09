@@ -1,5 +1,6 @@
 package com.sample.config;
 
+import com.sample.services.CORSFilter;
 import com.sample.services.SecurityService;
 import com.sample.services.TodolistAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -45,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().disable().httpBasic().disable().cors().configurationSource(getCors()).and()
                 .exceptionHandling()
                 .and()
                 .authorizeRequests()
@@ -71,6 +73,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder getBCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    private CorsConfigurationSource getCors(){
+        return new CORSFilter();
     }
 
 

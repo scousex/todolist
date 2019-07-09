@@ -1,27 +1,29 @@
 package com.sample.services;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
-public class CORSFilter implements Filter {
+public class CORSFilter implements CorsConfigurationSource {
+
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setHeader("Accept", "application/json");
-        response.setHeader("Access-Control-Allow-Origin", "/**");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("X-Requested-With", "XMLHttpRequest");
-        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, " +
-                            "Content-Type, Access-Control-Allow-Headers, Authorization");
-        filterChain.doFilter(servletRequest, servletResponse);
+    public CorsConfiguration getCorsConfiguration(HttpServletRequest httpServletRequest) {
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        corsConfiguration.addAllowedHeader("x-requested-with");
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("/**"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("x-requested-with", "Authorization"));
+
+        return corsConfiguration;
     }
-
-    public void init(FilterConfig filterConfig){}
-
-    public void destroy(){}
 }
