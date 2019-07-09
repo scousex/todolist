@@ -30,8 +30,8 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
-    @Autowired
-    private UserValidator userValidator;
+   // @Autowired
+    //private UserValidator userValidator;
 
 
     @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -28,14 +28,6 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
 
     public static final Logger logger  = Logger.getLogger(SecurityServiceImpl.class.getName());
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private NoteService noteService;
 
     @Qualifier("userDetailsServiceImpl")
     @Autowired

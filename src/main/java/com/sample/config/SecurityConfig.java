@@ -1,7 +1,6 @@
 package com.sample.config;
 
 import com.sample.services.SecurityService;
-import com.sample.services.TodolistAuthenticationEntryPoint;
 import com.sample.services.TodolistAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,8 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -35,8 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     TodolistAuthenticationProvider authenticationProvider;
 
-    @Autowired
-    TodolistAuthenticationEntryPoint todolistAuthenticationEntryPoint;
 
     @Autowired
     public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception{
@@ -52,10 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .exceptionHandling()
-              //  .authenticationEntryPoint(todolistAuthenticationEntryPoint)
                 .and()
-               // .formLogin().loginPage("/login").permitAll()
-               // .and()
                 .authorizeRequests()
                 .antMatchers("/todos").authenticated()
                 .antMatchers("/addNotes").authenticated()
@@ -76,10 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
     @Bean
     public BCryptPasswordEncoder getBCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
 
 }
