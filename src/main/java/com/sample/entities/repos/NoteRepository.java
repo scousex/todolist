@@ -12,8 +12,8 @@ public interface NoteRepository extends JpaRepository<Note,Integer> {
     //List<Note> findAllByOrderByNoteIdAsc();
     List<Note> findAllByUsernameOrderByNoteIdAsc(@Param("username") String username);
     List<Note> findAllByUsernameOrderByNoteIdDesc(@Param("username") String username);
-    Note findByNoteId(@Param("noteId") long id);
-    void deleteByNoteId(@Param("noteId") long noteId);
+    Note findByNoteId(@Param("noteId") Integer id);
+    void removeNoteByNoteId(@Param("noteId") Integer id);
    // void setNoteStatus(@Param("noteId") long noteId, @Param("status") boolean status);
     //void save(@Param("username") String username,  @Param("text") String text);
 }

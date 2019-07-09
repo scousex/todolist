@@ -60,7 +60,8 @@ public class UserController {
         return new ResponseEntity<Object>(token, HttpStatus.OK);
     }
 
-    @CrossOrigin
+
+    @CrossOrigin(origins = "/**")
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
 

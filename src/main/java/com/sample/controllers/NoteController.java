@@ -7,6 +7,7 @@ import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
 
 import com.google.gson.JsonObject;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,9 +47,7 @@ public class NoteController {
 
         logger.info("Получено "+notes.size() + " записей из базы");
 
-
         String usersNotes = gsonBuilder.toJson(notes);
-
 
         return notes;
     }
@@ -85,6 +84,7 @@ public class NoteController {
     @PutMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> edit(@RequestParam("id") Integer id, @RequestParam("status") boolean status) {
 
+
         ///TODO: Добавить проверку наличия
         Note note = noteService.getNoteById(id);
 
@@ -93,7 +93,7 @@ public class NoteController {
 
         ///TODO: Обработать ошибки при сохранении
         noteService.saveNote(note);
-        return new ResponseEntity<Object>(HttpStatus.OK); //возвращаем view с редактированием
+        return new ResponseEntity<Object>("Note status updated",HttpStatus.OK); //возвращаем view с редактированием
     }
 
     @PutMapping(path="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -102,15 +102,15 @@ public class NoteController {
 
         ///TODO: Обработать ошибки обновления
         noteService.updateNote(id, text, status);
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<Object>("Note edited",HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> delete(@RequestParam Integer id) {
+    public ResponseEntity<Object> delete(@RequestParam String id) {
 
         ///TODO: Обработать ошибки удаления
-        noteService.deleteNote(id);
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        noteService.deleteNote(Integer.parseInt(id));
+        return new ResponseEntity<Object>("Note deleted",HttpStatus.OK);
     }
 
 }

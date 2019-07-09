@@ -28,6 +28,7 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
 
     public static final Logger logger  = Logger.getLogger(SecurityServiceImpl.class.getName());
 
+    //private TokenProvider tokenProvider;
 
     @Qualifier("userDetailsServiceImpl")
     @Autowired
@@ -74,6 +75,8 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
         if(usernamePasswordAuthenticationToken.isAuthenticated()){
             logger.info("User is authenticated with token");
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+
         }
       //  logger.info("TOkEN: " + usernamePasswordAuthenticationToken.getDetails().toString());
         return usernamePasswordAuthenticationToken.getName().toString();
