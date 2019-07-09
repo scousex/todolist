@@ -60,6 +60,7 @@ public class UserController {
         return new ResponseEntity<Object>(token, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
 
@@ -71,7 +72,10 @@ public class UserController {
            return new ResponseEntity<Object>("User does not exists", HttpStatus.BAD_REQUEST);
         }
         logger.info("AutoLogin started");
+
+
         token = securityService.autoLogin(username,password);
+
 
         return new ResponseEntity<Object>(token, HttpStatus.OK);
     }

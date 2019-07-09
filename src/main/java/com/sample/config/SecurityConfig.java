@@ -54,15 +54,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
               //  .authenticationEntryPoint(todolistAuthenticationEntryPoint)
                 .and()
-                .formLogin().loginPage("/login")
-                .and()
+               // .formLogin().loginPage("/login").permitAll()
+               // .and()
                 .authorizeRequests()
                 .antMatchers("/todos").authenticated()
                 .antMatchers("/addNotes").authenticated()
                 .antMatchers("/status").authenticated()
-                .antMatchers("/edit").authenticated()
-                .and()
-                .logout().logoutUrl("/logout").permitAll();
+                .antMatchers("/edit").authenticated();
+                //.and()
+                //.logout().logoutUrl("/logout").permitAll();
     }
 
     @Override
