@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
+import com.sample.entities.User;
+import com.sample.services.CurrentUser;
 import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
 
@@ -41,9 +43,9 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(){
+    public @ResponseBody ResponseEntity<List<Note>> list(@CurrentUser User currentUser){
         Gson gsonBuilder = new GsonBuilder().create();
-        List<Note> notes = filterAndSort();
+        List<Note> notes = filterAndSort(currentUser.getUsername());
 
        // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
 
@@ -54,14 +56,14 @@ public class NoteController {
         return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
     }
 
-    private List<Note> filterAndSort() {
+    private List<Note> filterAndSort(String username) {
         List<Note> notebook = null;
         switch (sortDateMethod) {
             case "ASC":
-                notebook = noteService.findAllOrderByAsc(securityService.findUserInUsername());
+                notebook = noteService.findAllOrderByAsc(username);
                 break;
             case "DESC":
-                notebook = noteService.findAllOrderByDesc(securityService.findUserInUsername());
+                notebook = noteService.findAllOrderByDesc(username);
                 break;
         }
         System.out.println("Получено " + notebook.size());
@@ -71,8 +73,8 @@ public class NoteController {
 
     @CrossOrigin("/addNote")
     @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateNote(@RequestBody ObjectNode obj) {
-        String username = securityService.findUserInUsername();
+    public ResponseEntity<Object> updateNote(@CurrentUser User currentUser, @RequestBody ObjectNode obj) {
+        String username = currentUser.getUsername();
         if(noteService.saveNote(new Note(username,obj.get("text").asText())));
         {
             return new ResponseEntity<Object>("Note added",HttpStatus.OK);

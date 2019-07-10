@@ -2,9 +2,11 @@ package com.sample.token;
 
 
 import com.sample.entities.User;
+import com.sample.services.UserService;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,9 @@ public class TokenProvider {
 
     private int expirationInMs = 604800000;
 
+    @Autowired
+    UserService userService;
+
     Date now = new Date();
 
     Date expiryDate = new Date(now.getTime()+expirationInMs);
@@ -29,7 +34,7 @@ public class TokenProvider {
 
     public String createToken(Authentication authentication){
 
-        User user = (User) authentication.getPrincipal();
+        User user = (User) userService.findByUsername(authentication.getPrincipal().toString());
         logger.info("Creating token for user "+user.getUsername());
         return Jwts.builder()
                 .setSubject(user.getUsername())
