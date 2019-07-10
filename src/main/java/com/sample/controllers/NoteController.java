@@ -37,9 +37,9 @@ public class NoteController {
     @Autowired
     private SecurityService securityService;
 
-
-    @GetMapping(path="todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<Note> list(){
+    @CrossOrigin("/*")
+    @GetMapping(path="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Note>> list(){
         Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort();
 
@@ -47,9 +47,9 @@ public class NoteController {
 
         logger.info("Получено "+notes.size() + " записей из базы");
 
-        String usersNotes = gsonBuilder.toJson(notes);
+      //  String usersNotes = gsonBuilder.toJson(notes);
 
-        return notes;
+        return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
     }
 
 
@@ -70,7 +70,7 @@ public class NoteController {
     }
 
     @PostMapping(path = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateNote(@RequestParam("text") String text) {
+    public ResponseEntity<Object> updateNote(@RequestBody String text) {
         String username = securityService.findUserInUsername();
         if(noteService.saveNote(new Note(username,text)))
         {
