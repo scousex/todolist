@@ -38,7 +38,7 @@ public class NoteController {
     @Autowired
     private SecurityService securityService;
 
-    @CrossOrigin("/todos")
+    @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<List<Note>> list(){
         Gson gsonBuilder = new GsonBuilder().create();
@@ -69,7 +69,7 @@ public class NoteController {
     }
 
     @CrossOrigin("/addNote")
-    @PostMapping(path = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateNote(@RequestBody ObjectNode obj) {
         String username = securityService.findUserInUsername();
         if(noteService.saveNote(new Note(username,obj.get("text").asText())));
@@ -82,7 +82,7 @@ public class NoteController {
     }
 
     @CrossOrigin("/status")
-    @PutMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> edit(@RequestBody ObjectNode obj) {
 
 
@@ -100,7 +100,7 @@ public class NoteController {
         return new ResponseEntity<Object>("Note status updated",HttpStatus.OK); //возвращаем view с редактированием
     }
 
-    @PutMapping(path="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> saveNote(@RequestBody ObjectNode note) {
 
         Integer id = note.get("id").asInt();
@@ -112,7 +112,7 @@ public class NoteController {
         return new ResponseEntity<Object>("Note edited",HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> delete(@RequestParam String id) {
 
         ///TODO: Обработать ошибки удаления
