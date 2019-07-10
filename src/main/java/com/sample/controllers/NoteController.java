@@ -41,9 +41,9 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(Principal principal){
+    public @ResponseBody ResponseEntity<List<Note>> list(){
         Gson gsonBuilder = new GsonBuilder().create();
-        List<Note> notes = filterAndSort(principal);
+        List<Note> notes = filterAndSort();
 
        // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
 
@@ -54,14 +54,14 @@ public class NoteController {
         return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
     }
 
-    private List<Note> filterAndSort(Principal principal) {
+    private List<Note> filterAndSort() {
         List<Note> notebook = null;
         switch (sortDateMethod) {
             case "ASC":
-                notebook = noteService.findAllOrderByAsc(principal.getName());
+                notebook = noteService.findAllOrderByAsc(securityService.findUserInUsername());
                 break;
             case "DESC":
-                notebook = noteService.findAllOrderByDesc(principal.getName());
+                notebook = noteService.findAllOrderByDesc(securityService.findUserInUsername());
                 break;
         }
         System.out.println("Получено " + notebook.size());

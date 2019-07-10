@@ -2,8 +2,10 @@ package com.sample.controllers;
 
 import com.google.gson.JsonObject;
 import com.sample.entities.User;
+import com.sample.payloads.AuthenticationResponse;
 import com.sample.services.SecurityService;
 import com.sample.services.UserService;
+import com.sample.token.TokenProvider;
 import com.sample.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,9 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
    // @Autowired
     //private UserValidator userValidator;
 
@@ -51,7 +56,7 @@ public class UserController {
 
         logger.info("AutoLogin started");
         try {
-            token = securityService.autoLogin(user.getUsername(), user.getPassword());
+            token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
         } catch (Exception e){
             logger.info(e.getMessage());
         }
@@ -62,7 +67,7 @@ public class UserController {
 
     @CrossOrigin("/*")
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<Object> login(@RequestBody Login login){
+    public @ResponseBody ResponseEntity<?> login(@RequestBody Login login){
 
         String token;
 
@@ -73,11 +78,9 @@ public class UserController {
         }
         logger.info("AutoLogin started");
 
+        token = tokenProvider.createToken(securityService.autoLogin(login.getUsername(),login.getPassword()));
 
-        token = securityService.autoLogin(login.getUsername(),login.getPassword());
-
-
-        return new ResponseEntity<Object>(token, HttpStatus.OK);
+        return new ResponseEntity(new AuthenticationResponse(token),HttpStatus.OK);
     }
 
    /* @GetMapping(path="/logout")

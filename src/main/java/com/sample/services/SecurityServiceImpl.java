@@ -61,7 +61,7 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
      * @param password
      */
     @Override
-    public String autoLogin(String username, String password) {
+    public Authentication autoLogin(String username, String password) {
 
         logger.info("AutoLOgin function is working..");
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -79,7 +79,7 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
 
         }
       //  logger.info("TOkEN: " + usernamePasswordAuthenticationToken.getDetails().toString());
-        return usernamePasswordAuthenticationToken.getName().toString();
+        return usernamePasswordAuthenticationToken;
     }
 
     @Override
