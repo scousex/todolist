@@ -53,11 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
-                .exceptionHandling()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/login","/registration").permitAll()
-                .anyRequest().authenticated();
+                .exceptionHandling();
+                //.and()
+                //.authorizeRequests()
+                //.antMatchers("/login","/registration").permitAll()
+                //.anyRequest().authenticated();
 
                 //.antMatchers("/todos","/addNotes","/status","/edit");
                 //.and()
