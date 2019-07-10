@@ -2,8 +2,8 @@ package com.sample.controllers;
 
 public class Login{
 
-    String username;
-    String password;
+    private String username;
+    private String password;
         /*Login(String username, String password){
             this.password = password;
             this.username = username;

@@ -63,7 +63,7 @@ public class UserController {
 
     @CrossOrigin("/*")
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<Object> login(@ModelAttribute Login login){
+    public @ResponseBody ResponseEntity<Object> login(@RequestBody Login login){
 
         String token;
 
