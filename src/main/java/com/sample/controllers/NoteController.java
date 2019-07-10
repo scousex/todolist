@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.MapKey;
 import javax.print.attribute.standard.Media;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,9 +41,9 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(){
+    public @ResponseBody ResponseEntity<List<Note>> list(Principal principal){
         Gson gsonBuilder = new GsonBuilder().create();
-        List<Note> notes = filterAndSort();
+        List<Note> notes = filterAndSort(principal);
 
        // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
 
@@ -53,14 +54,14 @@ public class NoteController {
         return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
     }
 
-    private List<Note> filterAndSort() {
+    private List<Note> filterAndSort(Principal principal) {
         List<Note> notebook = null;
         switch (sortDateMethod) {
             case "ASC":
-                notebook = noteService.findAllOrderByAsc(securityService.findUserInUsername());
+                notebook = noteService.findAllOrderByAsc(principal.getName());
                 break;
             case "DESC":
-                notebook = noteService.findAllOrderByDesc(securityService.findUserInUsername());
+                notebook = noteService.findAllOrderByDesc(principal.getName());
                 break;
         }
         System.out.println("Получено " + notebook.size());
