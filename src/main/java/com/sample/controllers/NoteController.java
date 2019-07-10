@@ -37,9 +37,9 @@ public class NoteController {
     @Autowired
     private SecurityService securityService;
 
-    @CrossOrigin("/*")
-    @GetMapping(path="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Note>> list(){
+    //@CrossOrigin("/todos")
+    @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ResponseEntity<List<Note>> list(){
         Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort();
 
@@ -51,8 +51,6 @@ public class NoteController {
 
         return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
     }
-
-
 
     private List<Note> filterAndSort() {
         List<Note> notebook = null;

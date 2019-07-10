@@ -52,13 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable().httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
-                .exceptionHandling()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/todos").authenticated()
-                .antMatchers("/addNotes").authenticated()
-                .antMatchers("/status").authenticated()
-                .antMatchers("/edit").authenticated();
+                .exceptionHandling();
+                //.and()
+                //.authorizeRequests()
+                //.antMatchers("/todos").authenticated()
+                //.antMatchers("/addNotes").authenticated()
+                //.antMatchers("/status").authenticated()
+                //.antMatchers("/edit").authenticated();
                 //.and()
                 //.logout().logoutUrl("/logout").permitAll();
     }
