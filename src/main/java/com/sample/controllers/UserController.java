@@ -35,12 +35,11 @@ public class UserController {
 
 
     @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> registration(@RequestParam("username") String username,
-                                               @RequestParam("password") String password){
+    public ResponseEntity<Object> registration(@RequestBody Login login){
 
         String token = "Token is not generated, please sign in using /login";
         logger.info("Registration started");
-        User user = new User(username, password);
+        User user = new User(login.getUsername(), login.getPassword());
 
        // userValidator.validate(user, bindingResult);
 
