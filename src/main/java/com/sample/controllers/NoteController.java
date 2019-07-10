@@ -1,5 +1,6 @@
 package com.sample.controllers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
@@ -37,7 +38,7 @@ public class NoteController {
     @Autowired
     private SecurityService securityService;
 
-    //@CrossOrigin("/todos")
+    @CrossOrigin("/todos")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody ResponseEntity<List<Note>> list(){
         Gson gsonBuilder = new GsonBuilder().create();
@@ -67,21 +68,26 @@ public class NoteController {
         return notebook;
     }
 
+    @CrossOrigin("/addNote")
     @PostMapping(path = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateNote(@RequestBody String text) {
+    public ResponseEntity<Object> updateNote(@RequestBody ObjectNode obj) {
         String username = securityService.findUserInUsername();
-        if(noteService.saveNote(new Note(username,text)))
+        if(noteService.saveNote(new Note(username,obj.get("text").asText())));
         {
             return new ResponseEntity<Object>("Note added",HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("User is unauthorized",HttpStatus.UNAUTHORIZED);
+        //return new ResponseEntity<>("User is unauthorized",HttpStatus.UNAUTHORIZED);
 
     }
 
+    @CrossOrigin("/status")
     @PutMapping(path = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> edit(@RequestParam("id") Integer id, @RequestParam("status") boolean status) {
+    public ResponseEntity<Object> edit(@RequestBody ObjectNode obj) {
 
+
+        Integer id = obj.get("id").asInt();
+        boolean status = obj.get("status").asBoolean();
 
         ///TODO: Добавить проверку наличия
         Note note = noteService.getNoteById(id);
@@ -95,8 +101,11 @@ public class NoteController {
     }
 
     @PutMapping(path="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveNote(@RequestParam Integer id, @RequestParam String text,
-                           @RequestParam(value = "status", required = false) boolean status) {
+    public ResponseEntity<Object> saveNote(@RequestBody ObjectNode note) {
+
+        Integer id = note.get("id").asInt();
+        String text = note.get("text").asText();
+        boolean status = note.get("status").asBoolean();
 
         ///TODO: Обработать ошибки обновления
         noteService.updateNote(id, text, status);

@@ -53,12 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable().httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
                 .exceptionHandling();
-                //.and()
-                //.authorizeRequests()
-                //.antMatchers("/todos").authenticated()
-                //.antMatchers("/addNotes").authenticated()
-                //.antMatchers("/status").authenticated()
-                //.antMatchers("/edit").authenticated();
+               /* .and()
+                .authorizeRequests()
+                .antMatchers("/todos").authenticated()
+                .antMatchers("/addNotes").authenticated()
+                .antMatchers("/status").authenticated()
+                .antMatchers("/edit").authenticated();*/
                 //.and()
                 //.logout().logoutUrl("/logout").permitAll();
     }
