@@ -61,21 +61,21 @@ public class UserController {
     }
 
 
-    @CrossOrigin
+    @CrossOrigin("/*")
     @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> login(@RequestParam("username") String username, @RequestParam("password") String password){
+    public @ResponseBody ResponseEntity<Object> login(@ModelAttribute Login login){
 
         String token;
 
         logger.info("Login started");
-        if(userService.findByUsername(username)==null){
+        if(userService.findByUsername(login.getUsername())==null){
             logger.info("Username is not found");
            return new ResponseEntity<Object>("User does not exists", HttpStatus.BAD_REQUEST);
         }
         logger.info("AutoLogin started");
 
 
-        token = securityService.autoLogin(username,password);
+        token = securityService.autoLogin(login.getUsername(),login.getPassword());
 
 
         return new ResponseEntity<Object>(token, HttpStatus.OK);
