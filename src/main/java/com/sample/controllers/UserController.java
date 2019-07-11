@@ -2,6 +2,7 @@ package com.sample.controllers;
 
 import com.google.gson.JsonObject;
 import com.sample.entities.User;
+import com.sample.payloads.ApiResponse;
 import com.sample.payloads.AuthenticationResponse;
 import com.sample.services.SecurityService;
 import com.sample.services.UserService;
@@ -35,8 +36,8 @@ public class UserController {
     @Autowired
     private TokenProvider tokenProvider;
 
-   // @Autowired
-    //private UserValidator userValidator;
+    @Autowired
+    private UserValidator userValidator;
 
 
     @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -48,21 +49,24 @@ public class UserController {
 
        // userValidator.validate(user, bindingResult);
 
-        if(userService.findByUsername(user.getUsername())!=null){
-            logger.info("Response has errors");
-            return new ResponseEntity<Object>("This user already exists",HttpStatus.BAD_REQUEST);
-        }
-        userService.save(user);
+        ApiResponse valid = userValidator.validateRegistration(login);
 
-        logger.info("AutoLogin started");
+        if(valid.getSuccess()){
+
+            userService.save(user);
+            /*logger.info("AutoLogin started");
         try {
             token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
         } catch (Exception e){
             logger.info(e.getMessage());
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }*/
+            return new ResponseEntity(valid
+                    ,HttpStatus.OK);
         }
 
-        return new ResponseEntity(new AuthenticationResponse(token), HttpStatus.OK);
+        return new ResponseEntity(
+                    valid, HttpStatus.BAD_REQUEST);
     }
 
 
@@ -72,12 +76,14 @@ public class UserController {
 
         String token;
 
+        boolean valid = userValidator.validateAuthorization(login);
+
         logger.info("Login started");
-        if(userService.findByUsername(login.getUsername())==null){
+        if(valid == false){
             logger.info("Username is not found");
-           return new ResponseEntity<Object>("User does not exists", HttpStatus.BAD_REQUEST);
+           return new ResponseEntity(
+                   new ApiResponse(false,"Username is not found"), HttpStatus.BAD_REQUEST);
         }
-        logger.info("AutoLogin started");
 
         token = tokenProvider.createToken(securityService.autoLogin(login.getUsername(),login.getPassword()));
 

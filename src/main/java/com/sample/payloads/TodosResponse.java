@@ -6,13 +6,13 @@ import java.util.List;
 
 public class TodosResponse {
     private List<Note> noteList;
-    private String success;
+    private boolean success;
 
     public void setNoteList(List<Note> noteList) {
         this.noteList = noteList;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(boolean success) {
         this.success = success;
     }
 
@@ -20,7 +20,7 @@ public class TodosResponse {
         return noteList;
     }
 
-    public String getSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
