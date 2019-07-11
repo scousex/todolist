@@ -11,5 +11,7 @@ public interface SecurityService {
 
     Authentication autoLogin(String username, String password);
 
+    public String getUserByToken(String token);
+
     void logout();
 }

@@ -2,6 +2,7 @@ package com.sample.services;
 
 import com.sample.entities.Note;
 import com.sample.entities.User;
+import com.sample.token.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,7 +29,9 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
 
     public static final Logger logger  = Logger.getLogger(SecurityServiceImpl.class.getName());
 
-    //private TokenProvider tokenProvider;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Qualifier("userDetailsServiceImpl")
     @Autowired
@@ -38,6 +41,14 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
      * Funcition to find users todolist after authorization
      * @return List of Notes (TodoList)
      */
+    public String getUserByToken(String token){
+        if(tokenProvider.validateToken(token)){
+           return tokenProvider.getUsernameFromJWT(token);
+        }
+
+        return null;
+    }
+
     @Override
     public String findUserInUsername() {
 

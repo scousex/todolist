@@ -43,9 +43,14 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(@CurrentUser User currentUser){
+    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader String token){
+
+        logger.info("request header is: \n" + token);
+
+        String username = securityService.getUserByToken(token);
+        
         Gson gsonBuilder = new GsonBuilder().create();
-        List<Note> notes = filterAndSort(currentUser.getUsername());
+        List<Note> notes = filterAndSort(username);
 
        // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
 
