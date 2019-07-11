@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
 import com.sample.entities.User;
+import com.sample.payloads.ApiResponse;
 import com.sample.services.CurrentUser;
 import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
@@ -86,7 +87,7 @@ public class NoteController {
 
         noteService.saveNote(new Note(username,obj.get("text").asText()));
 
-        return new ResponseEntity<Object>("Note added",HttpStatus.OK);
+        return new ResponseEntity<Object>(new ApiResponse(true,"Note added successfully"),HttpStatus.OK);
 
 
      //   return new ResponseEntity("User is unauthorized",HttpStatus.UNAUTHORIZED);
@@ -112,7 +113,7 @@ public class NoteController {
 
         ///TODO: Обработать ошибки при сохранении
         noteService.saveNote(note);
-        return new ResponseEntity<Object>("Note status updated",HttpStatus.OK); //возвращаем view с редактированием
+        return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK); //возвращаем view с редактированием
     }
 
     @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -128,7 +129,7 @@ public class NoteController {
 
         ///TODO: Обработать ошибки обновления
         noteService.updateNote(id, text, status);
-        return new ResponseEntity<Object>("Note edited",HttpStatus.OK);
+        return new ResponseEntity<Object>(new ApiResponse(true,"Note edited"),HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -140,7 +141,7 @@ public class NoteController {
         ///TODO: Обработать ошибки удаления
         Integer id = note.get("id").asInt();
         noteService.deleteNote(id);
-        return new ResponseEntity<Object>("Note deleted",HttpStatus.OK);
+        return new ResponseEntity<Object>(new ApiResponse(true,"Note deleted"),HttpStatus.OK);
     }
 
 }
