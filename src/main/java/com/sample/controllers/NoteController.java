@@ -43,11 +43,11 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader("Token") String token){
+    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader("Authorization") String token){
 
         logger.info("request header is: \n" + token);
 
-        String username = securityService.getUserByToken(token);
+        String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort(username);
@@ -78,11 +78,11 @@ public class NoteController {
 
     @CrossOrigin("/addNote")
     @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateNote(@RequestHeader("Token") String token, @RequestBody ObjectNode obj) {
+    public ResponseEntity<?> updateNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
         logger.info("request header is: \n" + token);
 
-        String username = securityService.getUserByToken(token);
+        String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         noteService.saveNote(new Note(username,obj.get("text").asText()));
 
@@ -95,11 +95,11 @@ public class NoteController {
 
     @CrossOrigin("/status")
     @PutMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> edit(@RequestHeader("Token") String token, @RequestBody ObjectNode obj) {
+    public ResponseEntity<Object> edit(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
         logger.info("request header is: \n" + token);
 
-        String username = securityService.getUserByToken(token);
+        String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         Integer id = obj.get("id").asInt();
         boolean status = obj.get("status").asBoolean();
@@ -116,11 +116,11 @@ public class NoteController {
     }
 
     @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveNote(@RequestHeader("Token") String token, @RequestBody ObjectNode note) {
+    public ResponseEntity<Object> saveNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode note) {
 
         logger.info("request header is: \n" + token);
 
-        String username = securityService.getUserByToken(token);
+        String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         Integer id = note.get("id").asInt();
         String text = note.get("text").asText();
