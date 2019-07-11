@@ -40,7 +40,7 @@ public class UserController {
 
 
     @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> registration(@RequestBody Login login){
+    public ResponseEntity<?> registration(@RequestBody Login login){
 
         String token = "Token is not generated, please sign in using /login";
         logger.info("Registration started");
@@ -59,9 +59,10 @@ public class UserController {
             token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
         } catch (Exception e){
             logger.info(e.getMessage());
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Object>(token, HttpStatus.OK);
+        return new ResponseEntity(new AuthenticationResponse(token), HttpStatus.OK);
     }
 
 

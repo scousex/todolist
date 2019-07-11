@@ -43,12 +43,12 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader String token){
+    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader("Token") String token){
 
         logger.info("request header is: \n" + token);
 
         String username = securityService.getUserByToken(token);
-        
+
         Gson gsonBuilder = new GsonBuilder().create();
         List<Note> notes = filterAndSort(username);
 
@@ -78,21 +78,28 @@ public class NoteController {
 
     @CrossOrigin("/addNote")
     @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateNote(@CurrentUser User currentUser, @RequestBody ObjectNode obj) {
-        String username = currentUser.getUsername();
-        if(noteService.saveNote(new Note(username,obj.get("text").asText())));
-        {
-            return new ResponseEntity<Object>("Note added",HttpStatus.OK);
-        }
+    public ResponseEntity<?> updateNote(@RequestHeader("Token") String token, @RequestBody ObjectNode obj) {
 
-        //return new ResponseEntity<>("User is unauthorized",HttpStatus.UNAUTHORIZED);
+        logger.info("request header is: \n" + token);
+
+        String username = securityService.getUserByToken(token);
+
+        noteService.saveNote(new Note(username,obj.get("text").asText()));
+
+        return new ResponseEntity<Object>("Note added",HttpStatus.OK);
+
+
+     //   return new ResponseEntity("User is unauthorized",HttpStatus.UNAUTHORIZED);
 
     }
 
     @CrossOrigin("/status")
     @PutMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> edit(@RequestBody ObjectNode obj) {
+    public ResponseEntity<Object> edit(@RequestHeader("Token") String token, @RequestBody ObjectNode obj) {
 
+        logger.info("request header is: \n" + token);
+
+        String username = securityService.getUserByToken(token);
 
         Integer id = obj.get("id").asInt();
         boolean status = obj.get("status").asBoolean();
@@ -109,7 +116,11 @@ public class NoteController {
     }
 
     @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> saveNote(@RequestBody ObjectNode note) {
+    public ResponseEntity<Object> saveNote(@RequestHeader("Token") String token, @RequestBody ObjectNode note) {
+
+        logger.info("request header is: \n" + token);
+
+        String username = securityService.getUserByToken(token);
 
         Integer id = note.get("id").asInt();
         String text = note.get("text").asText();
