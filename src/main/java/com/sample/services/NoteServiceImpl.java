@@ -40,7 +40,7 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public void deleteNote(Integer id){
-        noteRepository.removeNoteByNoteId(id);
+        noteRepository.deleteById(id);
     }
 
     @Override
