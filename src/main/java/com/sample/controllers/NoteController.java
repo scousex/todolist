@@ -132,10 +132,14 @@ public class NoteController {
     }
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> delete(@RequestParam String id) {
+    public ResponseEntity<Object> delete(@RequestHeader("Authorization") String token, @RequestBody ObjectNode note) {
 
+        logger.info("request header is: \n" + token);
+
+        String username = securityService.getUserByToken(token.substring(7,token.length()));
         ///TODO: Обработать ошибки удаления
-        noteService.deleteNote(Integer.parseInt(id));
+        Integer id = note.get("id").asInt();
+        noteService.deleteNote(id);
         return new ResponseEntity<Object>("Note deleted",HttpStatus.OK);
     }
 
