@@ -105,7 +105,7 @@ public class NoteController {
         Integer id = obj.get("id").asInt();
         boolean status = obj.get("status").asBoolean();
 
-        if(noteService.getNoteById(id).getUsername() == username) {
+        if(noteService.getNoteById(id).getUsername().equals(username)) {
             ///TODO: Обработать ошибки при сохранении
             noteService.setNoteStatus(id, status);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK);
@@ -125,7 +125,7 @@ public class NoteController {
         String text = note.get("text").asText();
         boolean status = note.get("status").asBoolean();
 
-        if(noteService.getNoteById(id).getUsername() == username) {
+        if(noteService.getNoteById(id).getUsername().equals(username)) {
             ///TODO: Обработать ошибки обновления
             noteService.updateNote(id, text, status);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note edited"),HttpStatus.OK);
@@ -142,7 +142,7 @@ public class NoteController {
         String username = securityService.getUserByToken(token.substring(7,token.length()));
         ///TODO: Обработать ошибки удаления
         Integer id = note.get("id").asInt();
-        if(noteService.getNoteById(id).getUsername() == username) {
+        if(noteService.getNoteById(id).getUsername().equals(username)) {
 
             noteService.deleteNote(id);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note deleted"),HttpStatus.OK);
