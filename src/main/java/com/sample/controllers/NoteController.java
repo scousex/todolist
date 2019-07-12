@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.MapKey;
 import javax.print.attribute.standard.Media;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class NoteController {
     private SecurityService securityService;
 
     @CrossOrigin("/*")
-    @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader("Authorization") String token){
 
         logger.info("request header is: \n" + token);
@@ -78,14 +79,14 @@ public class NoteController {
     }
 
     @CrossOrigin("/addNote")
-    @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
         logger.info("request header is: \n" + token);
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
-        noteService.saveNote(new Note(username,obj.get("text").asText()));
+        noteService.saveNote(new Note(username,obj.get("text").asText().getBytes(StandardCharsets.UTF_8).toString()));
 
         return new ResponseEntity<Object>(new ApiResponse(true,"Note added successfully"),HttpStatus.OK);
 
@@ -95,7 +96,7 @@ public class NoteController {
     }
 
     @CrossOrigin("/status")
-    @PutMapping(value = "/status", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @PutMapping(value = "/status", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> edit(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
         logger.info("request header is: \n" + token);
@@ -113,7 +114,7 @@ public class NoteController {
                 new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK); //возвращаем view с редактированием
     }
 
-    @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> saveNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode note) {
 
         logger.info("request header is: \n" + token);
@@ -121,7 +122,7 @@ public class NoteController {
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         Integer id = note.get("id").asInt();
-        String text = note.get("text").asText();
+        String text = note.get("text").asText().getBytes(StandardCharsets.UTF_8).toString();
         boolean status = note.get("status").asBoolean();
 
         if(noteService.getNoteById(id).getUsername() == username) {
@@ -133,7 +134,7 @@ public class NoteController {
                 new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Object> delete(@RequestHeader("Authorization") String token, @RequestBody ObjectNode note) {
 
         logger.info("request header is: \n" + token);
