@@ -96,6 +96,7 @@ public class SecurityServiceImpl implements SecurityService, AuthenticationProvi
     @Override
     public void logout() {
         SecurityContextHolder.clearContext();
+
         //authenticationManager.authenticate(null);
     }
 

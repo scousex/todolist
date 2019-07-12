@@ -54,14 +54,14 @@ public class UserController {
         if(valid.getSuccess()){
 
             userService.save(user);
-            /*logger.info("AutoLogin started");
+            logger.info("AutoLogin started");
         try {
             token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
         } catch (Exception e){
             logger.info(e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }*/
-            return new ResponseEntity(valid
+            return new ResponseEntity(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+            return new ResponseEntity(new AuthenticationResponse(token)
                     ,HttpStatus.OK);
         }
 
@@ -90,11 +90,4 @@ public class UserController {
         return new ResponseEntity(new AuthenticationResponse(token),HttpStatus.OK);
     }
 
-   /* @GetMapping(path="/logout")
-    public ResponseEntity<JsonObject> logout()
-    {
-        securityService.logout();
-        return new ResponseEntity<JsonObject>(HttpStatus.OK);
-    }
-*/
 }

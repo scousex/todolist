@@ -102,18 +102,17 @@ public class NoteController {
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
+
         Integer id = obj.get("id").asInt();
         boolean status = obj.get("status").asBoolean();
 
-        ///TODO: Добавить проверку наличия
-       // Note note = noteService.getNoteById(id);
-
-        ///TODO: Обработать ошибки при смене статуса
-        //note.setStatus(status);
-
-        ///TODO: Обработать ошибки при сохранении
-        noteService.setNoteStatus(id,status);
-        return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK); //возвращаем view с редактированием
+        if(noteService.getNoteById(id).getUsername() == username) {
+            ///TODO: Обработать ошибки при сохранении
+            noteService.setNoteStatus(id, status);
+            return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK);
+        }
+        return new ResponseEntity<Object>(
+                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK); //возвращаем view с редактированием
     }
 
     @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -127,9 +126,13 @@ public class NoteController {
         String text = note.get("text").asText();
         boolean status = note.get("status").asBoolean();
 
-        ///TODO: Обработать ошибки обновления
-        noteService.updateNote(id, text, status);
-        return new ResponseEntity<Object>(new ApiResponse(true,"Note edited"),HttpStatus.OK);
+        if(noteService.getNoteById(id).getUsername() == username) {
+            ///TODO: Обработать ошибки обновления
+            noteService.updateNote(id, text, status);
+            return new ResponseEntity<Object>(new ApiResponse(true,"Note edited"),HttpStatus.OK);
+        }
+        return new ResponseEntity<Object>(
+                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -140,8 +143,16 @@ public class NoteController {
         String username = securityService.getUserByToken(token.substring(7,token.length()));
         ///TODO: Обработать ошибки удаления
         Integer id = note.get("id").asInt();
-        noteService.deleteNote(id);
-        return new ResponseEntity<Object>(new ApiResponse(true,"Note deleted"),HttpStatus.OK);
+        if(noteService.getNoteById(id).getUsername() == username) {
+
+            noteService.deleteNote(id);
+            return new ResponseEntity<Object>(new ApiResponse(true,"Note deleted"),HttpStatus.OK);
+
+        }
+
+        return new ResponseEntity<Object>(
+                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK);
+
     }
 
 }
