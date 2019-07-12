@@ -106,13 +106,13 @@ public class NoteController {
         boolean status = obj.get("status").asBoolean();
 
         ///TODO: Добавить проверку наличия
-        Note note = noteService.getNoteById(id);
+       // Note note = noteService.getNoteById(id);
 
         ///TODO: Обработать ошибки при смене статуса
-        note.setStatus(status);
+        //note.setStatus(status);
 
         ///TODO: Обработать ошибки при сохранении
-        noteService.saveNote(note);
+        noteService.setNoteStatus(id,status);
         return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK); //возвращаем view с редактированием
     }
 

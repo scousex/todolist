@@ -44,6 +44,13 @@ public class NoteServiceImpl implements NoteService{
     }
 
     @Override
+    public void setNoteStatus(Integer id, boolean status){
+        if(noteRepository.findByNoteId(id)!=null) {
+            noteRepository.updateStatusById(id, status);
+        }
+    }
+
+    @Override
     public void updateNote(Integer id, String text, boolean status) {
         Note note = noteRepository.findByNoteId(id);
 
