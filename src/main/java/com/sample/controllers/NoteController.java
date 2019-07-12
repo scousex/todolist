@@ -86,6 +86,8 @@ public class NoteController {
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
+        logger.info("Text: \n"+obj.get("text").asText());
+
         noteService.saveNote(new Note(username,obj.get("text").asText()));
 
         return new ResponseEntity<Object>(new ApiResponse(true,"Note added successfully"),HttpStatus.OK);
