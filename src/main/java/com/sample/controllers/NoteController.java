@@ -86,7 +86,7 @@ public class NoteController {
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
-        noteService.saveNote(new Note(username,obj.get("text").asText().getBytes(StandardCharsets.UTF_8).toString()));
+        noteService.saveNote(new Note(username,obj.get("text").asText()));
 
         return new ResponseEntity<Object>(new ApiResponse(true,"Note added successfully"),HttpStatus.OK);
 
@@ -122,7 +122,7 @@ public class NoteController {
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         Integer id = note.get("id").asInt();
-        String text = note.get("text").asText().getBytes(StandardCharsets.UTF_8).toString();
+        String text = note.get("text").asText();
         boolean status = note.get("status").asBoolean();
 
         if(noteService.getNoteById(id).getUsername() == username) {
