@@ -40,7 +40,7 @@ public class UserController {
     private UserValidator userValidator;
 
 
-    @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path="/registration", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
     public ResponseEntity<?> registration(@RequestBody Login login){
 
         String token = "Token is not generated, please sign in using /login";
@@ -71,7 +71,7 @@ public class UserController {
 
 
     @CrossOrigin("/*")
-    @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path="/login", produces = MediaType.APPLICATION_JSON_VALUE + "; charset=utf-8")
     public @ResponseBody ResponseEntity<?> login(@RequestBody Login login){
 
         String token;
