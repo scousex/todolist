@@ -4,29 +4,17 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
-import com.sample.entities.User;
 import com.sample.payloads.ApiResponse;
-import com.sample.services.CurrentUser;
 import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
 
-import com.google.gson.JsonObject;
-import io.netty.handler.codec.json.JsonObjectDecoder;
+import org.apache.tika.parser.txt.CharsetDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.MapKey;
-import javax.print.attribute.standard.Media;
-import java.nio.charset.StandardCharsets;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -83,6 +71,11 @@ public class NoteController {
     public ResponseEntity<?> updateNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
         logger.info("request header is: \n" + token);
+
+        CharsetDetector charsetDetector = new CharsetDetector();
+
+        charsetDetector.setText(obj.get("text").asText().getBytes());
+        logger.info("Charset at input:  "+charsetDetector.detect());
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 

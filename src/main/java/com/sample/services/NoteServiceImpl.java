@@ -3,6 +3,7 @@ package com.sample.services;
 import com.sample.entities.Note;
 import com.sample.entities.repos.NoteRepository;
 import com.sample.entities.repos.UserRepository;
+import org.apache.tika.parser.txt.CharsetDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,9 @@ public class NoteServiceImpl implements NoteService{
     @Override
     public boolean saveNote(Note note){
         if(userRepository.findByUsername(note.getUsername())!=null){
-            logger.info("Note info: \n");
-            logger.info("text: "+note.getText());
-            logger.info("\nusername: "+ note.getUsername());
+            CharsetDetector charsetDetector = new CharsetDetector();
+            charsetDetector.setText(note.getText().getBytes());
+            logger.info("Charset in service:  "+ charsetDetector.detect());
             noteRepository.save(note);
             return true;
         }

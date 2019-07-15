@@ -27,6 +27,7 @@ public class Note {
 
     public Note(String username, String text){
         this.username = username;
+
         this.text = text;
         this.status = false;
     }
