@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(characterEncodingFilter(),CharacterEncodingFilter.class)
+               // .addFilterBefore(characterEncodingFilter(),CharacterEncodingFilter.class)
                 .exceptionHandling();
               //  .and()
                // .authorizeRequests()
@@ -106,12 +106,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Bean
+  /*  @Bean
     CharacterEncodingFilter characterEncodingFilter(){
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         return filter;
-    }
+    }*/
 
 
 
