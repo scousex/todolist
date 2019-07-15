@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class NoteServiceImpl implements NoteService{
+
+    public static final Logger logger = Logger.getLogger(NoteServiceImpl.class.getName());
 
     @Autowired
     private NoteRepository noteRepository;
@@ -30,6 +33,9 @@ public class NoteServiceImpl implements NoteService{
     @Override
     public boolean saveNote(Note note){
         if(userRepository.findByUsername(note.getUsername())!=null){
+            logger.info("Note info: \n");
+            logger.info("text: "+note.getText());
+            logger.info("\nusername: "+ note.getUsername());
             noteRepository.save(note);
             return true;
         }
