@@ -17,6 +17,11 @@ public interface NoteRepository extends JpaRepository<Note,Integer> {
     @Transactional
     @Query("UPDATE Note SET status=:status WHERE note_id=:id")
     void updateStatusById(@Param("id")Integer id, @Param("status")boolean status);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Note SET status=:status, text=:text WHERE note_id=:id")
+    void updateById(@Param("id")Integer id, @Param("status")boolean status, @Param("text") String text);
     //List<Note> findAllByOrderByNoteIdAsc();
     List<Note> findAllByUsernameOrderByNoteIdAsc(@Param("username") String username);
     List<Note> findAllByUsernameOrderByNoteIdDesc(@Param("username") String username);

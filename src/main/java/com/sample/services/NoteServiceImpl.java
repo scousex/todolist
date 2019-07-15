@@ -61,10 +61,11 @@ public class NoteServiceImpl implements NoteService{
     public void updateNote(Integer id, String text, boolean status) {
         Note note = noteRepository.findByNoteId(id);
 
-        note.setText(text);
+        /*note.setText(text);
         note.setStatus(status);
 
-        noteRepository.save(note);
+        noteRepository.save(note);*/
+        noteRepository.updateById(id,status,text);
     }
 
     @Override
