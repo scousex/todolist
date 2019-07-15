@@ -1,6 +1,7 @@
 package com.sample.config;
 
 import com.sample.services.CORSFilter;
+import com.sample.services.CustomCharsetFilter;
 import com.sample.services.SecurityService;
 import com.sample.services.TodolistAuthenticationProvider;
 import com.sample.token.AuthenticationFilter;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +21,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -62,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-               // .addFilterBefore(characterEncodingFilter(),CharacterEncodingFilter.class)
+                .addFilterAt(characterEncodingFilter(), CsrfFilter.class)
                 .exceptionHandling();
               //  .and()
                // .authorizeRequests()
@@ -106,12 +109,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-  /*  @Bean
+    @Bean
+    @Order(2)
     CharacterEncodingFilter characterEncodingFilter(){
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
+        CharacterEncodingFilter filter = new CharacterEncodingFilter("UTF-8");
+        filter.setForceResponseEncoding(true);
+        filter.setForceRequestEncoding(true);
         return filter;
-    }*/
+    }
+
+
 
 
 
