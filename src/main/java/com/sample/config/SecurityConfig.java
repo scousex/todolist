@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .httpBasic().disable().cors().configurationSource(corsConfigurationSource()).and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAt(characterEncodingFilter(), CsrfFilter.class)
+                .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
                 .exceptionHandling();
               //  .and()
                // .authorizeRequests()
