@@ -1,4 +1,4 @@
-package com.sample.services;
+package com.sample.config;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

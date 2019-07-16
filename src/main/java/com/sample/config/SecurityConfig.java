@@ -1,9 +1,6 @@
 package com.sample.config;
 
-import com.sample.services.CORSFilter;
-import com.sample.services.CustomCharsetFilter;
 import com.sample.services.SecurityService;
-import com.sample.services.TodolistAuthenticationProvider;
 import com.sample.token.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +23,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
-import java.nio.charset.CharsetEncoder;
 import java.util.Arrays;
 
 @Configuration
@@ -93,9 +88,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    private CorsConfigurationSource getCors(){
-        return new CORSFilter();
-    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {

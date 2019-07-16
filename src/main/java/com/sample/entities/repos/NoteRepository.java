@@ -10,23 +10,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Репозиторий для сущности Note.
+ * Интерфейс взаимодействия с БД.
+ */
 
 public interface NoteRepository extends JpaRepository<Note,Integer> {
 
+    //Обновить статус заметки
     @Modifying
     @Transactional
     @Query("UPDATE Note SET status=:status WHERE note_id=:id")
     void updateStatusById(@Param("id")Integer id, @Param("status")boolean status);
 
+    //Редактировать, обновить заметку
     @Modifying
     @Transactional
     @Query("UPDATE Note SET status=:status, text=:text WHERE note_id=:id")
     void updateById(@Param("id")Integer id, @Param("status")boolean status, @Param("text") String text);
-    //List<Note> findAllByOrderByNoteIdAsc();
+
+    //Искать заметки пользователя по его username и сортировать их по id по возрастанию
     List<Note> findAllByUsernameOrderByNoteIdAsc(@Param("username") String username);
+
+    //Искать заметки пользователя по его username и сортировать их по id по убыванию
     List<Note> findAllByUsernameOrderByNoteIdDesc(@Param("username") String username);
+
+    //Найти конкретную заметку по id
     Note findByNoteId(@Param("noteId") Integer id);
+
+    //Удалить заметку по id
     void deleteById(@Param("noteId") Integer id);
-   // void setNoteStatus(@Param("noteId") long noteId, @Param("status") boolean status);
-    //void save(@Param("username") String username,  @Param("text") String text);
+
 }

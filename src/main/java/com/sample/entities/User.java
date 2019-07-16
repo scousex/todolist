@@ -11,6 +11,11 @@ import javax.persistence.Table;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Класс, реализующий сущность базы данных.
+ * User - пользователь сервиса.
+ * Реализует UserDetails для использования этого класса в аутентификации/авторизации.
+ **/
 @Entity
 @Table(name = "users", schema = "heroku_778f00b1b8e6900")
 public class User implements UserDetails {

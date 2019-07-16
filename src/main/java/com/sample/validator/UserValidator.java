@@ -1,16 +1,10 @@
 package com.sample.validator;
 
-import com.sample.controllers.Login;
-import com.sample.entities.User;
+import com.sample.payloads.Login;
 import com.sample.payloads.ApiResponse;
 import com.sample.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
-
-import javax.validation.Validation;
 
 @Component
 public class UserValidator{

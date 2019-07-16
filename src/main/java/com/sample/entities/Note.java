@@ -1,7 +1,10 @@
 package com.sample.entities;
 
 import javax.persistence.*;
-
+/**
+ * Класс, реализующий сущность базы данных.
+ * Note - задача, заметка пользователя.
+ **/
 @Entity
 @Table(name = "note", schema = "heroku_778f00b1b8e6900", catalog = "")
 public class Note {

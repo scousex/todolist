@@ -1,4 +1,4 @@
-package com.sample.controllers;
+package com.sample.payloads;
 
 public class Login{
 

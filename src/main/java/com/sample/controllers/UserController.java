@@ -1,9 +1,9 @@
 package com.sample.controllers;
 
-import com.google.gson.JsonObject;
 import com.sample.entities.User;
 import com.sample.payloads.ApiResponse;
 import com.sample.payloads.AuthenticationResponse;
+import com.sample.payloads.Login;
 import com.sample.services.SecurityService;
 import com.sample.services.UserService;
 import com.sample.token.TokenProvider;
@@ -12,14 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.logging.Logger;
 
 @RestController
