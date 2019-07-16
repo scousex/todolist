@@ -26,17 +26,10 @@ public class NoteServiceImpl implements NoteService{
        return noteRepository.findByNoteId(id);
     }
 
-   // @Override
-    //public void setNoteStatus(Integer id, boolean status) {
-     //   noteRepository.setNoteStatus(id,status);
-    //}
 
     @Override
     public boolean saveNote(Note note){
         if(userRepository.findByUsername(note.getUsername())!=null){
-            CharsetDetector charsetDetector = new CharsetDetector();
-            charsetDetector.setText(note.getText().getBytes());
-            logger.info("Charset in service:  "+ charsetDetector.detect());
             noteRepository.save(note);
             return true;
         }
@@ -61,10 +54,6 @@ public class NoteServiceImpl implements NoteService{
     public void updateNote(Integer id, String text, boolean status) {
         Note note = noteRepository.findByNoteId(id);
 
-        /*note.setText(text);
-        note.setStatus(status);
-
-        noteRepository.save(note);*/
         noteRepository.updateById(id,status,text);
     }
 

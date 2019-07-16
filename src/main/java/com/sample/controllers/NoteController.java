@@ -72,11 +72,6 @@ public class NoteController {
 
         logger.info("request header is: \n" + token);
 
-        CharsetDetector charsetDetector = new CharsetDetector();
-
-        charsetDetector.setText(obj.get("text").asText().getBytes());
-        logger.info("Charset at input:  "+charsetDetector.detect());
-
         String username = securityService.getUserByToken(token.substring(7,token.length()));
 
         logger.info("Text: \n"+obj.get("text").asText());
