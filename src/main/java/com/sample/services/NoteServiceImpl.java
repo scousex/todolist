@@ -27,15 +27,10 @@ public class NoteServiceImpl implements NoteService{
     }
 
 
+
     @Override
-    public boolean saveNote(Note note){
-        if(userRepository.findByUsername(note.getUsername())!=null){
-            noteRepository.save(note);
-            return true;
-        }
-
-        return false;
-
+    public void saveNote(Note note) {
+        noteRepository.save(note);
     }
 
     @Override
@@ -45,15 +40,11 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public void setNoteStatus(Integer id, boolean status){
-        if(noteRepository.findByNoteId(id)!=null) {
-            noteRepository.updateStatusById(id, status);
-        }
+      noteRepository.updateStatusById(id, status);
     }
 
     @Override
     public void updateNote(Integer id, String text, boolean status) {
-        Note note = noteRepository.findByNoteId(id);
-
         noteRepository.updateById(id,status,text);
     }
 
@@ -65,5 +56,7 @@ public class NoteServiceImpl implements NoteService{
     public List<Note> findAllOrderByDesc(String username) {
         return noteRepository.findAllByUsernameOrderByNoteIdDesc(username);
     }
+
+
 
 }

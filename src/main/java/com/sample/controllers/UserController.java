@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Logger;
 
+/**
+ * Контроллер для работы с пользователем (регистрация, авторизация).
+ * RestAPI, обеспечивает обработку запросов внешнего приложения.
+ */
 @RestController
 public class UserController {
 
@@ -41,20 +45,17 @@ public class UserController {
         logger.info("Registration started");
         User user = new User(login.getUsername(), login.getPassword());
 
-       // userValidator.validate(user, bindingResult);
-
         ApiResponse valid = userValidator.validateRegistration(login);
 
         if(valid.getSuccess()){
-
             userService.save(user);
-            logger.info("AutoLogin started");
-        try {
-            token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
-        } catch (Exception e){
-            logger.info(e.getMessage());
-            return new ResponseEntity(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+
+            try {
+                token = tokenProvider.createToken(securityService.autoLogin(user.getUsername(), user.getPassword()));
+            } catch (Exception e){
+                logger.info(e.getMessage());
+                return new ResponseEntity(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity(new AuthenticationResponse(token)
                     ,HttpStatus.OK);
         }

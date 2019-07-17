@@ -6,6 +6,10 @@ import com.sample.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Класс для валидации данных пользователя при регистрации и авторизации.
+ */
+
 @Component
 public class UserValidator{
 

@@ -1,5 +1,10 @@
 package com.sample.payloads;
 
+
+/**
+ * Класс для приёма полезной нагрузки запроса на авторизацию/регистрацию.
+ * Позволяет принять json-объект с ключами username и password в теле запроса.
+ */
 public class Login{
 
     private String username;

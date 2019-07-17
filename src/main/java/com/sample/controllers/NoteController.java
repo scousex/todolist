@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
+/**
+ * Контроллер для работы с заметками (просмотр, добавление, изменение статуса, редактирование, удаление).
+ * RestAPI, обеспечивает обработку запросов внешнего приложения.
+ */
 
 @RestController
 public class NoteController {
@@ -33,22 +37,17 @@ public class NoteController {
 
     @CrossOrigin("/*")
     @GetMapping(value="/todos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public @ResponseBody ResponseEntity<List<Note>> list(@RequestHeader("Authorization") String token){
+    public @ResponseBody ResponseEntity<?> list(@RequestHeader("Authorization") String token){
 
-        logger.info("request header is: \n" + token);
-
-        String username = securityService.getUserByToken(token.substring(7,token.length()));
-
-        Gson gsonBuilder = new GsonBuilder().create();
-        List<Note> notes = filterAndSort(username);
-
-       // if(notes.size()==0) return new ResponseEntity<Object>("User hasn't notes",HttpStatus.NOT_EXTENDED);
-
-        logger.info("Получено "+notes.size() + " записей из базы");
-
-      //  String usersNotes = gsonBuilder.toJson(notes);
-
-        return new ResponseEntity<List<Note>>(notes,HttpStatus.OK);
+        try {
+            String username = securityService.getUserByToken(token.substring(7, token.length()));
+            List<Note> notes = filterAndSort(username);
+            return new ResponseEntity<List<Note>>(notes, HttpStatus.OK);
+        }catch (Exception e)
+        {
+            return new ResponseEntity<Object>(
+                    new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     private List<Note> filterAndSort(String username) {
@@ -70,16 +69,15 @@ public class NoteController {
     @PostMapping(value = "/addNote", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> updateNote(@RequestHeader("Authorization") String token, @RequestBody ObjectNode obj) {
 
-        logger.info("request header is: \n" + token);
-
-        String username = securityService.getUserByToken(token.substring(7,token.length()));
-
-        logger.info("Text: \n"+obj.get("text").asText());
-
-        noteService.saveNote(new Note(username,obj.get("text").asText()));
-
-        return new ResponseEntity<Object>(new ApiResponse(true,"Note added successfully"),HttpStatus.OK);
-
+        try {
+            String username = securityService.getUserByToken(token.substring(7, token.length()));
+            noteService.saveNote(new Note(username, obj.get("text").asText()));
+            return new ResponseEntity<Object>(
+                    new ApiResponse(true, "Note added successfully"), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Object>(
+                    new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
 
      //   return new ResponseEntity("User is unauthorized",HttpStatus.UNAUTHORIZED);
 
@@ -95,13 +93,13 @@ public class NoteController {
         Integer id = obj.get("id").asInt();
         boolean status = obj.get("status").asBoolean();
 
-        if(noteService.getNoteById(id).getUsername().equals(username)) {
-            ///TODO: Обработать ошибки при сохранении
+        try{
             noteService.setNoteStatus(id, status);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note status updated"),HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<Object>(
+                    new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST); //возвращаем view с редактированием
         }
-        return new ResponseEntity<Object>(
-                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK); //возвращаем view с редактированием
     }
 
     @PutMapping(value="/edit", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -115,13 +113,13 @@ public class NoteController {
         String text = note.get("text").asText();
         boolean status = note.get("status").asBoolean();
 
-        if(noteService.getNoteById(id).getUsername().equals(username)) {
-            ///TODO: Обработать ошибки обновления
+        try{
             noteService.updateNote(id, text, status);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note edited"),HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<Object>(
+                    new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<Object>(
-                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -130,17 +128,14 @@ public class NoteController {
         logger.info("request header is: \n" + token);
 
         String username = securityService.getUserByToken(token.substring(7,token.length()));
-        ///TODO: Обработать ошибки удаления
         Integer id = note.get("id").asInt();
-        if(noteService.getNoteById(id).getUsername().equals(username)) {
-
+        try{
             noteService.deleteNote(id);
             return new ResponseEntity<Object>(new ApiResponse(true,"Note deleted"),HttpStatus.OK);
-
+        }catch (Exception e) {
+            return new ResponseEntity<Object>(
+                    new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<Object>(
-                new ApiResponse(false,"The note doesn't belong to you"),HttpStatus.OK);
 
     }
 

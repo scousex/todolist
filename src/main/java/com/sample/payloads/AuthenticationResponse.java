@@ -1,5 +1,10 @@
 package com.sample.payloads;
 
+/**
+ * Полезная нагрузка для json-ответа.
+ * Класс сформирует json-объект, который возвратится в теле ответа.
+ * Объект возвратит данные для аутентификации: токен пользователя и тип токена.
+ */
 public class AuthenticationResponse {
 
     private String accessToken;

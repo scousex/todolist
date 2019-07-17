@@ -51,6 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider((AuthenticationProvider)securityService)
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(getBCryptPasswordEncoder());
+
     }
 
 
