@@ -63,14 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
                 .exceptionHandling();
-              //  .and()
-               // .authorizeRequests()
-                //.antMatchers("/login","/registration").permitAll()
-                //.anyRequest().authenticated();
 
-                //.antMatchers("/todos","/addNotes","/status","/edit");
-                //.and()
-                //.logout().logoutUrl("/logout").permitAll();
     }
 
     @Override

@@ -1,14 +1,10 @@
 package com.sample.controllers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sample.entities.Note;
 import com.sample.payloads.ApiResponse;
 import com.sample.services.NoteService;
 import com.sample.services.SecurityService;
-
-import org.apache.tika.parser.txt.CharsetDetector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
