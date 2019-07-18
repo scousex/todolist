@@ -23,7 +23,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
-
+/**
+ * Сервис для обеспечения безопасности (авторизация, аутентификация).
+ * Реализация интерфейса.
+ */
 @Service
 public class SecurityServiceImpl implements SecurityService, AuthenticationProvider {
 

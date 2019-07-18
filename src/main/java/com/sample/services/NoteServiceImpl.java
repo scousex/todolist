@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
+/**
+ * Сервис для выполнения операций по заметкам.
+ * Реализация интерфейса.
+ */
 
 @Service
 public class NoteServiceImpl implements NoteService{

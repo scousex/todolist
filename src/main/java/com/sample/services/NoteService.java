@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Сервис для обработки
+ * Сервис для выполнения операций по заметкам.
+ * Интерфейс.
  */
 
 public interface NoteService {
