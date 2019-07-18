@@ -23,7 +23,7 @@ public class NoteController {
 
     public static final Logger logger = Logger.getLogger(NoteController.class.getName());
 
-    private String sortDateMethod = "ASC";
+    private String sortDateMethod = "DESC";
 
     @Autowired
     private NoteService noteService;
